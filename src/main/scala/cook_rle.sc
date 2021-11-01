@@ -1,4 +1,3 @@
-b
 def sum(list: List[Int]): Int = list match {
 	case Nil => 0
 	case n :: rest => println(n, rest); n + sum(rest)
@@ -15,18 +14,18 @@ def compress[T](msg: Seq[T]): Seq[(T, Int)] = {
 			// si le curseur est sur la mm lettre là, on incremente
 			if (letter == cursor_msg) (letter, count + 1) :: corps // je change la tete du corps
 			// si le curseur est une nouvelle lettre
-			else (cursor_msg, 1) +: acc //
+			else (cursor_msg, 1) +: acc //e
 	}).reverse
 }
 
 def uncompress[T](seq_msg: Seq[(T, Int)]): Option[Seq[T]] = {
-	def duplicate[T](x: T, nb: Int): Seq[T] = {
+	def duplicate(x: T, nb: Int): Seq[T] = {
 		if (nb == 0)
 			Seq.empty[T]
 		else
 			x +: duplicate(x, nb - 1)
 	}
-	val seq_msg_uncompressed = seq_msg.toList.foldLeft(Seq.empty[T])((acc, elem) => acc ++ duplicate[T](elem._1, elem._2))
+	val seq_msg_uncompressed = seq_msg.toList.foldLeft(Seq.empty[T])((acc, elem) => acc ++ duplicate(elem._1, elem._2))
 	// c carré ça ? demandé à la prof
 	if (seq_msg == compress(seq_msg_uncompressed)) {
 		Some(seq_msg_uncompressed)
