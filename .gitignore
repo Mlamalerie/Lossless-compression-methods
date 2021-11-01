@@ -1,0 +1,8 @@
+# Project exclude paths
+project
+target
+.idea
+.bsp
+src/main/scala/Compressor.scala
+src/main/scala/statistic/Bit.scala
+src/main/scala/lz/Dictionaries.scala
