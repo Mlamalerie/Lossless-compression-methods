@@ -37,7 +37,7 @@ def uncompress[T](seq_msg: Seq[(T, Int)]): Option[Seq[T]] = {
 var l = Seq()
 
 
-val msg_original = "aabccdeefgijjjklmnopqrrstttuvvwwxyyyz"
+val msg_original = "aabccdeefgijjjklmnopqrrstttuvvwwxyyyzz"
 
 
 val msg_compressed = compress(msg_original)

@@ -4,5 +4,5 @@ target
 .idea
 .bsp
 src/main/scala/Compressor.scala
-src/main/scala/statistic/Bit.scala
-src/main/scala/lz/Dictionaries.scala
+src/main/scala/compress/statistic/Bit.scala
+src/main/scala/compress/lz/Dictionaries.scala
