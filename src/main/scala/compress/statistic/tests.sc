@@ -2,7 +2,10 @@ import compress.Compressor
 import compress.statistic.{Bit, EncodingLeaf, EncodingNode, EncodingTree, Huffman, One, Zero}
 
 import scala.math
+var a = 'a'
+var b = 'b'
 
+a.compare(b)
 val msg_original = "MLAMALI"
 var h = new Huffman[Char](msg_original)
 //println("...",h.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList)

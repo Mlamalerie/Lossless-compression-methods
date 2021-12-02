@@ -44,6 +44,7 @@ class Huffman[S](source : Seq[S]) extends StatisticCompressor[S](source)
           construct_tree(new_res_list)
         }
       }
+
       val leafsOrdered = this.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList
       leafsOrdered match {
         case leafs : List[EncodingTree[S]] if(leafs.length) > 0 => {

@@ -24,7 +24,7 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
 
     /** The sequence of occurrences sorted by count */
     val orderedCounts : Seq[(S, Int)] = {
-      occurrences.toList.sortWith(_._2 > _._2)
+      occurrences.toList.sortWith((a,b) => (a._2 > b._2))
     }
 
     /** The encoding tree (in most cases, depends from `source`) */

@@ -1,10 +1,47 @@
-import compress.statistic.{Bit, EncodingLeaf, EncodingNode, EncodingTree, Huffman, One, Zero}
+import compress.statistic.{Bit, EncodingLeaf, EncodingNode, EncodingTree, Huffman, One, ShannonFano, Zero}
 var tree_mlamali = EncodingNode[Char](7, EncodingNode[Char](4, EncodingLeaf[Char](2,'L'), EncodingLeaf[Char](2,'M')), EncodingNode[Char](3, EncodingLeaf[Char](2,'A'), EncodingLeaf[Char](1,'I')))
 print(tree_mlamali)
 val add = (a: Int, b: Int) => a + b
 def add2(a: Int, b: Int): Int = {
 	a + b
 }
+
+def two_equitable_part(tab : List[EncodingTree[Char]],  i_g : Int =0, i_d : Int=0, g :  List[EncodingTree[Char]] = Nil , d : List[EncodingTree[Char]] = Nil ): (List[EncodingTree[Char]],List[EncodingTree[Char]]) = {
+	val tab_sorted = tab.sortWith(_.label < _.label)
+
+	val sum_g = g.map(_.label).sum
+	val sum_d = d.map(_.label).sum
+	println(i_g, i_d, " - ", g,  sum_g , " ; ", d,  sum_d)
+	if( (g.length + d.length) == tab_sorted.length) {
+		(g,d)
+	} else {
+		if(sum_g <= sum_d) {
+			two_equitable_part(tab_sorted,i_g+1,i_d,g :+ tab(i_g),d)
+		} else {
+			two_equitable_part(tab_sorted,i_g,i_d+1,g,tab.reverse(i_d) +: d)
+		}
+	}
+}
+def loop(tab : List[EncodingTree[Char]]) = {
+	if(tab.length >= 2) {
+		val two_part = two_equitable_part(tab)
+		List(loop(two_part._1)) :: List(loop(two_part._2))
+	} else {
+		tab(0)
+	}
+}
+val msg_original = "DIDONDINADITONDUDOSDUNDODUDINDON"
+//val msg_original = "DI"
+var shf = new ShannonFano[Char](msg_original)
+//val shf_tree = shf.tree.get
+val leafOrdered = shf.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList
+//val two_low = get_two_lowest_to(leafOrdered )
+println("leafOrdered ",leafOrdered ,leafOrdered.length)
+val x = two_equitable_part(leafOrdered)
+println(x)
+println("##############################################")
+val caca = loop(leafOrdered)
+
 lazy val dict_correspondence = {
 	def construct_dict[S](tree : EncodingTree[S]) : Map[S,Seq[Bit]] = {
 		val map_res = Map[S,Seq[Bit]]()
