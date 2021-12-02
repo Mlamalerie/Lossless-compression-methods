@@ -5,7 +5,7 @@ import org.scalatest.matchers.must.Matchers
 
 class HuffmanSpec extends AnyFlatSpec with Matchers
   {
-    behavior of "compressor.statistic.Huffman"
+    behavior of "compressor.compress.statistic.Huffman"
      it must "exist" in
        { "val compressor : Huffman[Char] = new Huffman(Seq.empty[Char])" must compile }
      it must "contain methods `compress` and `uncompress` with correct signature" in

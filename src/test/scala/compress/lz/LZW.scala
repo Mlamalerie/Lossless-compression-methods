@@ -7,7 +7,7 @@ import Dictionaries._
 
 class LZWSpec extends AnyFlatSpec with Matchers
   {
-    behavior of "compressor.lz.LZW"
+    behavior of "compressor.compress.lz.LZW"
      it must "exist" in
        { "val compressor : LZW = new LZW()" must compile }
      it must "contain methods `compress` and `uncompress` with correct signature" in

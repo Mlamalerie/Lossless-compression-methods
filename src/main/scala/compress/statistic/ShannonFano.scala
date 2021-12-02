@@ -4,5 +4,5 @@ package compress.statistic
 class ShannonFano[S](source : Seq[S]) extends StatisticCompressor[S](source)
   {
     /** @inheritdoc */
-    lazy val tree : Option[EncodingTree[S]] = ???
+    lazy val tree : Option[EncodingTree[S]] = None
   }

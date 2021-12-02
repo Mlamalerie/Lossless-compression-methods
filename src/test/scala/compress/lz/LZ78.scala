@@ -5,7 +5,7 @@ import org.scalatest.matchers.must.Matchers
 
 class LZ78Spec extends AnyFlatSpec with Matchers
   {
-    behavior of "compressor.lz.LZ78"
+    behavior of "compressor.compress.lz.LZ78"
      it must "exist" in
        { "val compressor = LZ78" must compile }
      it must "contain methods `compress` and `uncompress` with correct signature" in

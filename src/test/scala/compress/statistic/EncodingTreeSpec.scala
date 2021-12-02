@@ -5,7 +5,7 @@ import org.scalatest.matchers.must.Matchers
 
 class EncodingTreeSpec extends AnyFlatSpec with Matchers
   {
-    behavior of "compress.statistic.EncodingTree"
+    behavior of "compress.compress.statistic.EncodingTree"
       it must "exist along with its child case classes" in
         { "val t : EncodingTree[Char] = EncodingNode(2, EncodingLeaf(1, 'a'), EncodingLeaf(1, 'b'))" must compile }
       it must "contain methods `has` and `meanLength` with correct signature" in

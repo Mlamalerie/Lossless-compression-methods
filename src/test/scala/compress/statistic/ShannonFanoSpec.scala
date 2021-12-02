@@ -5,7 +5,7 @@ import org.scalatest.matchers.must.Matchers
 
 class ShannonFanoSpec extends AnyFlatSpec with Matchers
   {
-    behavior of "compressor.statistic.ShannonFano"
+    behavior of "compressor.compress.statistic.ShannonFano"
      it must "exist" in
        { "val compressor : ShannonFano[Char] = new ShannonFano(Seq.empty[Char])" must compile }
      it must "contain methods `compress` and `uncompress` with correct signature" in
