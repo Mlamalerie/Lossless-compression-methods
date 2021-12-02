@@ -1,7 +1,10 @@
 import compress.statistic.{Bit, EncodingLeaf, EncodingNode, EncodingTree, Huffman, One, Zero}
 var tree_mlamali = EncodingNode[Char](7, EncodingNode[Char](4, EncodingLeaf[Char](2,'L'), EncodingLeaf[Char](2,'M')), EncodingNode[Char](3, EncodingLeaf[Char](2,'A'), EncodingLeaf[Char](1,'I')))
 print(tree_mlamali)
-0 +: Seq()
+val add = (a: Int, b: Int) => a + b
+def add2(a: Int, b: Int): Int = {
+	a + b
+}
 lazy val dict_correspondence = {
 	def construct_dict[S](tree : EncodingTree[S]) : Map[S,Seq[Bit]] = {
 		val map_res = Map[S,Seq[Bit]]()

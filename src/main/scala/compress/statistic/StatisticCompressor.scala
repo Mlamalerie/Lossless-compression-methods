@@ -16,7 +16,10 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
     /** SHANNON entropy of source */
     val entropy : Double = {
       def log2(x: Double): Double = scala.math.log(x) / scala.math.log(2)
-      -source.toList.map(c => occurrences(c).toDouble/source.length * log2(occurrences(c).toDouble/source.length)).sum
+      -occurrences.map( c => {
+        //println("--",c)
+        c._2.toDouble / source.length * log2(c._2.toDouble / source.length)
+      }).sum
     }
 
     /** The sequence of occurrences sorted by count */
@@ -28,12 +31,34 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
     def tree : Option[EncodingTree[S]]
 
     /** @inheritdoc */
-    def compress(msg: Seq[S]): Seq[Bit] = {
-      Seq.empty[Bit]
+    def compress(msg: Seq[S]): Seq[Bit] = this.tree match {
+          // si arbre est bien défini
+           case Some(the_tree: EncodingTree[S]) => {
+             // pour chaque symbol du message
+             msg.map(c => {
+               the_tree.encode(c) match {
+                 case Some(ch_encoded: Seq[Bit]) => ch_encoded
+                 case _ => Nil
+               }
+             }).flatten.toList
+           }
+           // si arbre est pas bien défini
+           case _ => Seq()
     }
 
+
     /** @inheritdoc */
-    def uncompress(res: Seq[Bit]): Option[Seq[S]] = {
-      None
+    def uncompress(res: Seq[Bit]): Option[Seq[S]] = this.tree match {
+      // si arbre est bien défini
+      case Some(the_tree: EncodingTree[S]) => {
+        // pour chaque symbol du message encodé
+        the_tree.decode(res) match {
+          case Some(msg_decoded: Seq[S]) => Some(msg_decoded)
+          case _ => None
+        }
+      }
+      // si arbre est pas bien défini
+      case _ => None
     }
+
   }

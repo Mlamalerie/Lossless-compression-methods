@@ -52,13 +52,29 @@ object test {
 		//println("delete      ", delete_nodes_to(two_low,leafOrdered)  )
 		//println("add         ", add_one_node_to(two_low(0), leafOrdered) )
 		//var h = new Huffman[Char]("MLAMALI")
-		var h = new Huffman[Char]("HOURRAHOURRAHOURRRRA")
-		println("...",h.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList)
-		val h_tree = h.tree.get
-		println("#final#",h_tree)
-		println(h_tree.decodeOnce(List(Zero)))
-		println(h_tree.reduceWith(x=> x.toString)((g,d) => g + d))
-		println(h_tree.decodeOnce(Seq(One,Zero)))
+		//var h = new Huffman[Char]("HOURRAHOURRAHOURRRRA")
+		//var h = new Huffman[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
+		val msg_original = "MLAMALI"
+		var h = new Huffman[Char](msg_original)
+		//println("...",h.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList)
+		val tree_mlamali = h.tree.get
+
+
+		println("#final#",tree_mlamali)
+		var sequence_bits = List(Zero, One,Zero)
+		println(tree_mlamali.decodeOnce(sequence_bits))
+
+		//println(h.occurrences)
+
+		println(h.entropy)
+
+
+		val msg_compressed = h.compress(msg_original)
+		println(msg_compressed)
+		val msg_uncompressed = h.uncompress(msg_compressed)
+		println(msg_uncompressed)
+		//println(tree_mlamali.meanLength)
+
 
 		//println(tree.reduce((g,d) => d.toString + g.toString))
 	}

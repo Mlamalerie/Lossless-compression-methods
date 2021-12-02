@@ -62,7 +62,7 @@ sealed abstract class EncodingTree[S](val label : Int)
 
 
     /* ENCONDING/DECODING OPERATIONS */
-    val dict_correspondence : Map[S,Seq[Bit]] = {
+    lazy val dict_correspondence : Map[S,Seq[Bit]] = {
       def construct_dict(tree : EncodingTree[S]) : Map[S,Seq[Bit]] = {
         def visiter(node : EncodingTree[S], bits_list : Seq[Bit]) : Map[S,Seq[Bit]] = {
           node match {
@@ -185,7 +185,20 @@ sealed abstract class EncodingTree[S](val label : Int)
     /* MISCELLANEOUS */
 
     /** Mean length of code associated to encoding tree */
-    lazy val meanLength : Double = 0.0 // TODO
+    lazy val meanLength : Double = {
+      def parcourir(node_current : EncodingTree[S]) : Double = node_current match {
+        case EncodingLeaf(lbl, v   ) => {
+          val v_encoded = this.encode(v)
+          if(v_encoded.isDefined) {
+            v_encoded.get.length.toDouble * lbl.toDouble
+          } else {
+            0.0
+          }
+        } // si c'est une feuille
+        case EncodingNode(_, l, r) => parcourir(l) + parcourir(r) // si c'est un noeud
+      }
+      parcourir(this)/this.label.toDouble
+    } // TODO
 
     /** @inheritdoc */
     override def toString : String = this match
