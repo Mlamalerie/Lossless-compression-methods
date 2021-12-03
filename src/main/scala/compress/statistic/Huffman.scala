@@ -1,5 +1,6 @@
 package compress.statistic
 
+import scala.annotation.tailrec
 import scala.collection.View.Empty
 
 /** The HUFFMAN compression method */
@@ -23,10 +24,12 @@ class Huffman[S](source : Seq[S]) extends StatisticCompressor[S](source)
       val add_one_node_to = (adding: EncodingTree[S],nodes_list : List[EncodingTree[S]])  => {
         adding +: nodes_list
       }
+
+      @tailrec
       def construct_tree(nodes_list :  List[EncodingTree[S]]) : EncodingTree[S] = {
         //println("#########################")
         if (nodes_list.length == 1) {
-          nodes_list(0)
+          nodes_list.head
         }else {
           // les deux plus petit noeud
           val two_nodes = get_two_lowest_to(nodes_list )
@@ -47,12 +50,11 @@ class Huffman[S](source : Seq[S]) extends StatisticCompressor[S](source)
 
       val leafsOrdered = this.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList
       leafsOrdered match {
-        case leafs : List[EncodingTree[S]] if(leafs.length) > 0 => {
-          leafs match {
-            case good_leafs if (leafs.size > 0) => Some(construct_tree(leafsOrdered))
+        // si la list de feuille est bien défini avec au moins une feuille dedans
+        case leafs : List[EncodingTree[S]] if leafs.nonEmpty => construct_tree(leafs) match {
+            case result_tree : EncodingTree[S] => Some(result_tree)
             case _ => None
           }
-        }
         case _ => None
       }
 

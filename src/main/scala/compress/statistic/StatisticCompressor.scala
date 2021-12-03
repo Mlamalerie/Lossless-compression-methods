@@ -24,8 +24,8 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
 
     /** The sequence of occurrences sorted by count */
     val orderedCounts : Seq[(S, Int)] = {
-      occurrences.toList.sortWith((a,b) => (a._2 > b._2))
-    }
+      occurrences.toList.sortWith((a,b) => a._2 > b._2) // trier par count uniquement
+     }
 
     /** The encoding tree (in most cases, depends from `source`) */
     def tree : Option[EncodingTree[S]]
@@ -33,15 +33,15 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
     /** @inheritdoc */
     def compress(msg: Seq[S]): Seq[Bit] = this.tree match {
           // si arbre est bien défini
-           case Some(the_tree: EncodingTree[S]) => {
+           case Some(the_tree: EncodingTree[S]) =>
              // pour chaque symbol du message
              msg.map(c => {
                the_tree.encode(c) match {
                  case Some(ch_encoded: Seq[Bit]) => ch_encoded
                  case _ => Nil
                }
-             }).flatten.toList
-           }
+             }).toList.flatten
+
            // si arbre est pas bien défini
            case _ => Seq()
     }
@@ -50,13 +50,13 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
     /** @inheritdoc */
     def uncompress(res: Seq[Bit]): Option[Seq[S]] = this.tree match {
       // si arbre est bien défini
-      case Some(the_tree: EncodingTree[S]) => {
+      case Some(the_tree: EncodingTree[S]) =>
         // pour chaque symbol du message encodé
         the_tree.decode(res) match {
           case Some(msg_decoded: Seq[S]) => Some(msg_decoded)
           case _ => None
         }
-      }
+
       // si arbre est pas bien défini
       case _ => None
     }

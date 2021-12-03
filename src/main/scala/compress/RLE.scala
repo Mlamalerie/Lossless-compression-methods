@@ -4,7 +4,6 @@ package compress
 class RLE[T] extends Compressor[T, Seq[(T, Int)]] {
 	/** @inheritdoc */
 	def compress(msg: Seq[T]): Seq[(T, Int)] = {
-
 		msg.toList.foldLeft(List.empty[(T, Int)])((acc, cursor_msg) => acc match {
 			// si l'accumulateur est vide
 			case Nil => (cursor_msg, 1) :: Nil // ajouter un tuple initial.. List((a,1))
@@ -28,12 +27,12 @@ class RLE[T] extends Compressor[T, Seq[(T, Int)]] {
 			else
 				x +: duplicate(x, nb - 1)
 		}
+
 		val seq_msg_uncompressed = seq_msg.toList.foldLeft(Seq.empty[T])((acc, elem) => acc ++ duplicate(elem._1, elem._2))
 		// c carré ça ? demandé à la prof
-		if (seq_msg == compress(seq_msg_uncompressed)) {
-			Some(seq_msg_uncompressed)
-		} else {
-			None
+		seq_msg_uncompressed match {
+			case result: Seq[T] => Some(result)
+			case _ => None
 		}
 	}
 }

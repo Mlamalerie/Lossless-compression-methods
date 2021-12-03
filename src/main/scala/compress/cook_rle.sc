@@ -6,7 +6,7 @@ def sum(list: List[Int]): Int = list match {
 }
 val nums = List(1, 2, 3, 4, 5)
 
-val msg_original = "whaaat"
+val msg_original = Seq()
 
 val r = new RLE[Char]()
 val msg_compressed = r.compress(msg_original)

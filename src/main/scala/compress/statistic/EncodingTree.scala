@@ -1,7 +1,10 @@
 package compress.statistic
 
+import scala.annotation.tailrec
+
 /** Trait for binary encoding trees (integer-labeled binary trees)
-  * @tparam S type of symbols (in leaves only)
+ *
+ * @tparam S type of symbols (in leaves only)
   */
 sealed abstract class EncodingTree[S](val label : Int)
   {
@@ -62,15 +65,21 @@ sealed abstract class EncodingTree[S](val label : Int)
 
 
     /* ENCONDING/DECODING OPERATIONS */
+
+    /* dictionnaire d'encodage */
     lazy val dict_correspondence : Map[S,Seq[Bit]] = {
-      def construct_dict(tree : EncodingTree[S]) : Map[S,Seq[Bit]] = {
-        def visiter(node : EncodingTree[S], bits_list : Seq[Bit]) : Map[S,Seq[Bit]] = {
-          node match {
+      def construct_dict(root_tree : EncodingTree[S]) : Map[S,Seq[Bit]] = {
+        // fonction qui va parcourir l'arbre à la recherche de feuille
+        def visiter(node : EncodingTree[S], bits_list : Seq[Bit]) : Map[S,Seq[Bit]] = node match {
             case EncodingLeaf(_, v) => Map[S,Seq[Bit]]()  + (v -> bits_list) // si c'est une feuille
             case EncodingNode(_, l, r) => visiter(l, bits_list :+ Zero) ++ visiter(r, bits_list :+ One) // si c'est un noeud
-          }
         }
-        visiter(tree,Seq())
+
+        root_tree match {
+          case EncodingLeaf(_, v) => Map(v -> Seq(One)) // gère les tree à une seulement  feuilles
+          case EncodingNode(_, _,_) => visiter(root_tree,Seq()) // gère les tree à 2feuilles et +
+        }
+
       }
       construct_dict(this)
     }
@@ -79,8 +88,10 @@ sealed abstract class EncodingTree[S](val label : Int)
       * @return the corresponding bit sequence of `x` is a leaf of encoding tree, `None` otherwise
       */
     def encode(x : S) : Option[Seq[Bit]] = {
+      // notez que : on aurait pu faire : if this.has()
+      // pour vérifier si le symbole est présent dans les feuille de l'arbre
       if (dict_correspondence.contains(x)) {
-        dict_correspondence.get(x)
+        dict_correspondence.get(x) // return some(c)
       } else {
         None
       }
@@ -91,37 +102,28 @@ sealed abstract class EncodingTree[S](val label : Int)
       * @return the decoded value and the bit sequence left to be decoded or `None` if current bit sequence does not lead to a leaf in enconding tree
       */
     def decodeOnce(res : Seq[Bit]) : Option[(S, Seq[Bit])] = {
-      def parcours(current_node : EncodingTree[S],chemin : Seq[Bit]) : Option[S] = {
-        //println(chemin.length)
-        current_node match {
-          case EncodingLeaf(_, v) => {
+      // fct parcourrir l'arbre récursivement
+      @tailrec
+      def parcourir_to_get_leaf(current_node : EncodingTree[S],chemin : Seq[Bit]) : Option[(S, Seq[Bit])] = current_node match {
+          case EncodingLeaf(_, v) =>
             // si je suis arrivé à une feuille
             // alors si je suis arrivé au bout du chemin
-            if(chemin.length == 0) {
-              Some(v)
-            } else {
-              None
-            }
-          }
-          case EncodingNode(_, l, r) => {
-            if (chemin.length > 0) {
-              chemin(0) match {
-                case Zero => parcours(l, chemin.slice(1, chemin.length))
-                case One => parcours(r, chemin.slice(1, chemin.length))
+              Some((v,chemin)) // trad + le chemin restant
+
+          case EncodingNode(_, l, r) =>
+            // si c'est un noeud
+            if (chemin.nonEmpty) {
+              chemin.head match {
+                case Zero => parcourir_to_get_leaf(l, chemin.slice(1, chemin.length)) // si 0 parcourir à droite
+                case One => parcourir_to_get_leaf(r, chemin.slice(1, chemin.length)) // si 1 parcourir à gauche
               }
             }else {
               None
             }
-          } // si c'est un noeud
         }
-      }
+
       // le caractère trouvé ou pas ?
-      val c = parcours(this,res)
-      if (c.isDefined) { // si oui
-        Some((c.get,res))
-      } else { //  sinon
-        None
-      }
+      parcourir_to_get_leaf(this,res)
     }
 
     /** Computes the sequence of values from the sequence of bits
@@ -129,75 +131,40 @@ sealed abstract class EncodingTree[S](val label : Int)
       * @return the sequence of decoded values or `None` otherwise
       */
     def decode(res : Seq[Bit]) : Option[Seq[S]] = {
-      // return (le char, nombre de saut)
-      def tree_find_char(current_node: EncodingTree[S], sequence: Seq[Bit], prof: Int = 0): Option[(S, Int)] = {
-        //println(sequence.length)
-        current_node match {
-          // si je suis arrivé à une feuille
-          case EncodingLeaf(_, v) => Some((v, prof))
-
-          case EncodingNode(_, l, r) => {
-            if (sequence.length > 0) {
-              sequence(0) match {
-                case Zero => tree_find_char(l, sequence.slice(1, sequence.length), prof + 1)
-                case One => tree_find_char(r, sequence.slice(1, sequence.length), prof + 1)
-              }
-            } else {
-              None
-            }
-
-          } // si c'est un noeud
-        }
-      }
-
-      def all_run(sequence: Seq[Bit],acc_seq_result : Seq[S] = Seq.empty[S]) : Option[Seq[S]] = {
-        // si il reste encore du chemin à faire
-
-        if (sequence.length > 0) {
-          //println("*")
-          val char_and_cursor = tree_find_char(this, sequence)
-          //println("***")
-          // si la lettre est trouvé
-          if (char_and_cursor.isDefined) { // si oui
-            //println("**")
-            val le_char = char_and_cursor.get._1
-            val le_cursor = char_and_cursor.get._2
-            all_run(sequence.slice(le_cursor,sequence.length),acc_seq_result :+ le_char )
-
-          } // si oh chakal ya pas la lettre dans mon arbre la elle existe pas
-          else {
-            None
+      // fct récursive qui va parcourir la séquence et decoder à chaque fois
+      @tailrec
+      def decode_bis(sequence : Seq[Bit],acc_result : Seq[S] = Seq()) : Option[Seq[S]] = {
+        if(sequence.nonEmpty ) {
+          this.decodeOnce(sequence) match {
+            case Some((c,l_seq)) => decode_bis(l_seq,acc_result :+ c)
+            case _ => None // renvoie None si
           }
         } else {
-          if(acc_seq_result.isEmpty) {
-            None
-          } else {
-            Some(acc_seq_result)
-          }
+          Some(acc_result)
         }
       }
-      // le caractère trouvé ou pas ?
-      all_run(res) // TODO faire des rise error selon si ya une lettre qui est pas reconnu
-
+      // si la sequence à res à decoder est bien rempli
+      if (res.nonEmpty) {
+        decode_bis(res)
+      } else { // si la sequence de bit est vide, nous avons fait le choix de la renvoyer (rien toucher)
+        Some(Seq())
+      }
     }
 
 
     /* MISCELLANEOUS */
-
     /** Mean length of code associated to encoding tree */
     lazy val meanLength : Double = {
-      def parcourir(node_current : EncodingTree[S]) : Double = node_current match {
-        case EncodingLeaf(lbl, v   ) => {
-          val v_encoded = this.encode(v)
-          if(v_encoded.isDefined) {
-            v_encoded.get.length.toDouble * lbl.toDouble
-          } else {
-            0.0
+      def parcourir_to_get_leaf(node_current : EncodingTree[S]) : Double = node_current match {
+        case EncodingLeaf(lbl, v   ) =>
+          this.encode(v) match {
+            case Some(v_encoded : Seq[Bit]) => v_encoded.length.toDouble * lbl.toDouble
+            case _ => 0.0
           }
-        } // si c'est une feuille
-        case EncodingNode(_, l, r) => parcourir(l) + parcourir(r) // si c'est un noeud
+         // si c'est une feuille
+        case EncodingNode(_, l, r) => parcourir_to_get_leaf(l) + parcourir_to_get_leaf(r) // si c'est un noeud
       }
-      parcourir(this)/this.label.toDouble
+      parcourir_to_get_leaf(this)/this.label.toDouble
     } // TODO
 
     /** @inheritdoc */
