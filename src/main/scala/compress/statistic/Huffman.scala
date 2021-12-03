@@ -12,7 +12,7 @@ class Huffman[S](source : Seq[S]) extends StatisticCompressor[S](source)
     lazy val tree : Option[EncodingTree[S]] =
     {
       val get_two_lowest_to = (nodes_list: Seq[EncodingTree[S]]) => {
-        nodes_list.sortWith(_.label > _.label).takeRight(2).toList
+        nodes_list.sortWith(_.label > _.label).takeRight(2).toList.reverse
       }
       val create_one_node = (g : EncodingTree[S],d: EncodingTree[S])  => {
         val value = g.label + d.label

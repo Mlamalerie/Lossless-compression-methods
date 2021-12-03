@@ -7,27 +7,20 @@ object test {
 	def main(args: Array[String]): Unit = {
 
 
-		var h = new Huffman[Char]("MISSISSIPI RIVER")
+		//var h = new Huffman[Char]("MISSISSIPI RIVER")
 		//var h = new Huffman[Char]("HOURRAHOURRAHOURRRRA")
-		//var h = new Huffman[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
-		val msg_original = ""
-		//var h = new Huffman[Char](msg_original)
+		val msg_original = "a"
+		var h = new Huffman[Char](msg_original)
+
 		//println("...",h.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList)
-		println(h.compress("RUE"))
 		println(h.orderedCounts)
-		println(h.tree.get.dict_correspondence)
-		//println(h.occurrences)
-/*
-		println(h.entropy)
+		println(h.tree)
+		println(h.compress(msg_original))
 
 
-		val msg_compressed = h.compress(msg_original)
-		println(msg_compressed)
-		val msg_uncompressed = h.uncompress(msg_compressed)
-		println(msg_uncompressed)
-		//println(tree_mlamali.meanLength)
+		/*EncodingNode([32],
+			EncodingNode([20], (D,11), EncodingNode([9], (O,5), (I,4))),
+			EncodingNode([12], EncodingNode([6], EncodingNode([3], EncodingNode([2], (A,1), (T,1)), (S,1)), (U,3)), (N,6)))
 */
-
-		//println(tree.reduce((g,d) => d.toString + g.toString))
 	}
 }

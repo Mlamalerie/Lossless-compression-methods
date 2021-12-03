@@ -1,5 +1,6 @@
 package compress.statistic
 
+import compress.CustomException
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 
@@ -32,8 +33,8 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
       it should "val dict_correspondence good" in {
           val t = new Huffman[Char]("MLAMALI").tree.get
 
-          assert(t.dict_correspondence('L') === Seq(Zero,Zero))
-          assert(t.dict_correspondence('M') === Seq(Zero,One))
+          assert(t.dict_correspondence('L').length === 2)
+          assert(t.dict_correspondence('M').length === 2)
 
           // test arbre 2 nodes
           val t1 = new Huffman[Char]("AB").tree.get
@@ -64,8 +65,8 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
 
       it should "encode() good" in {
           val t = new Huffman[Char]("MLAMALI").tree.get
-          assert(t.encode('L') === Some(Seq(Zero,Zero)))
-          assert(t.encode('M') === Some(Seq(Zero,One)))
+          assert(t.encode('L').getOrElse(Seq()).length === 2)
+          assert(t.encode('M').getOrElse(Seq()).length === 2)
           assert(t.encode('m') === None)
           assert(t.encode('x') === None)
       }
@@ -128,5 +129,15 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           assert(h.tree.get.label === 17 )
           assert(msg_uncompressed === msg_original.toList)
       }
-
+      it should "exemple compress, uncompress DINDE" in {
+          val msg_original = "DINDE"
+          val h = new Huffman[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
+          assert({try {
+              h.compress(msg_original)
+          }
+          catch {
+              case c: CustomException => true
+              case _ => false
+          }} === true)
+      }
   }

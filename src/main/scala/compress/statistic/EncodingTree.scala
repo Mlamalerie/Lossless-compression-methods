@@ -121,8 +121,6 @@ sealed abstract class EncodingTree[S](val label : Int)
               None
             }
         }
-
-      // le caractère trouvé ou pas ?
       parcourir_to_get_leaf(this,res)
     }
 
@@ -158,7 +156,10 @@ sealed abstract class EncodingTree[S](val label : Int)
       def parcourir_to_get_leaf(node_current : EncodingTree[S]) : Double = node_current match {
         case EncodingLeaf(lbl, v   ) =>
           this.encode(v) match {
-            case Some(v_encoded : Seq[Bit]) => v_encoded.length.toDouble * lbl.toDouble
+            case Some(v_encoded : Seq[Bit]) => {
+              //println(s"${lbl.toDouble}* ${v_encoded.length.toDouble} ")
+              v_encoded.length.toDouble * lbl.toDouble
+            }
             case _ => 0.0
           }
          // si c'est une feuille

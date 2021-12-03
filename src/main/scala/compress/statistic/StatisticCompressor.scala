@@ -1,6 +1,6 @@
 package compress.statistic
 
-import compress.Compressor
+import compress.{Compressor, CustomException}
 
 /** A compress.statistic compressor relies on the statistics of symbols in source
   * @param source the input source
@@ -38,7 +38,7 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
              msg.map(c => {
                the_tree.encode(c) match {
                  case Some(ch_encoded: Seq[Bit]) => ch_encoded
-                 case _ => Nil
+                 case _ => throw CustomException("le symbole " + c.toString + " n'est pas encodable par notre arbre. En effet, veuillez saisir un mot qui contient des symboles connus")
                }
              }).toList.flatten
 

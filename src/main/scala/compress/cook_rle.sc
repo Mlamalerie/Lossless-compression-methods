@@ -1,12 +1,15 @@
 import compress.RLE
 
+print("p")
 def sum(list: List[Int]): Int = list match {
 	case Nil => 0
 	case n :: rest => println(n, rest); n + sum(rest)
 }
+
+
 val nums = List(1, 2, 3, 4, 5)
 
-val msg_original = Seq()
+val msg_original = "Whaaaaat"
 
 val r = new RLE[Char]()
 val msg_compressed = r.compress(msg_original)

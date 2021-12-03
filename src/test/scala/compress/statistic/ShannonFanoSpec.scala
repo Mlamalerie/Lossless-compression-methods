@@ -1,5 +1,6 @@
 package compress.statistic
 
+import compress.CustomException
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.must.Matchers
 
@@ -108,6 +109,17 @@ class ShannonFanoSpec extends AnyFlatSpec with Matchers
           assert(h.tree.get.label === 32 )
           assert(math.abs(h.entropy - 2.565) < 0.001 )
           assert(msg_uncompressed === msg_original.toList)
+      }
+      it should "exemple compress, uncompress DINDE" in {
+          val msg_original = "DINDE"
+          val h = new ShannonFano[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
+          assert({try {
+              h.compress(msg_original)
+          }
+          catch {
+              case c: CustomException => true
+              case _ => false
+          }} === true)
       }
 
       it should "exemple compress, uncompress MISSISSIPPI RIVER" in {
