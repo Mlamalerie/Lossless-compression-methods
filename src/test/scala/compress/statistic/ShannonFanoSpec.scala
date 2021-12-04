@@ -101,7 +101,7 @@ class ShannonFanoSpec extends AnyFlatSpec with Matchers
           assert(t1.meanLength === 1.0)
       }
 
-      it should "exemple compress, uncompress DIDONDINADITONDUDOSDUNDODUDINDON" in {
+      it should "pass exemple compress, uncompress DIDONDINADITONDUDOSDUNDODUDINDON" in {
           val msg_original = "DIDONDINADITONDUDOSDUNDODUDINDON"
           val h = new ShannonFano[Char](msg_original)
           val msg_compressed = h.compress(msg_original)
@@ -110,7 +110,7 @@ class ShannonFanoSpec extends AnyFlatSpec with Matchers
           assert(math.abs(h.entropy - 2.565) < 0.001 )
           assert(msg_uncompressed === msg_original.toList)
       }
-      it should "exemple compress, uncompress DINDE" in {
+      it should "pass exemple compress, uncompress DINDE" in {
           val msg_original = "DINDE"
           val h = new ShannonFano[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
           assert({try {
@@ -122,7 +122,7 @@ class ShannonFanoSpec extends AnyFlatSpec with Matchers
           }} === true)
       }
 
-      it should "exemple compress, uncompress MISSISSIPPI RIVER" in {
+      it should "pass exemple compress, uncompress MISSISSIPPI RIVER" in {
           val msg_original = "MISSISSIPPI RIVER"
           val h = new ShannonFano[Char](msg_original)
           val msg_compressed = h.compress(msg_original)

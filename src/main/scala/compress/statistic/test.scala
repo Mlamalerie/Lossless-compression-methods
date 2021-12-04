@@ -9,7 +9,7 @@ object test {
 
 		//var h = new Huffman[Char]("MISSISSIPI RIVER")
 		//var h = new Huffman[Char]("HOURRAHOURRAHOURRRRA")
-		val msg_original = "a"
+		val msg_original = "HOURRAHOURRAHOURRRRA"
 		var h = new Huffman[Char](msg_original)
 
 		//println("...",h.orderedCounts.reverse.map( leaf => EncodingLeaf(leaf._2,leaf._1) ).toList)

@@ -53,7 +53,6 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           val values = t.dict_correspondence.values.toList
           assert((values.map(x => values.count(_ != x)).sum == (values.length - 1)*values.length) === true)
 
-
           // test arbre 2 nodes
           val t1 = new Huffman[Char]("AB").tree.get
           val values1 = t.dict_correspondence.values.toList
@@ -102,7 +101,7 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
 
       }
 
-      it should "exemple compress, uncompress HOURRAHOURRAHOURRRRA" in {
+      it should "pass exemple compress, uncompress HOURRAHOURRAHOURRRRA" in {
           val msg_original = "HOURRAHOURRAHOURRRRA"
           val h = new Huffman[Char](msg_original)
           val msg_compressed = h.compress(msg_original)
@@ -112,7 +111,7 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           assert(msg_uncompressed === msg_original.toList)
       }
 
-      it should "exemple compress, uncompress RESEAUX" in {
+      it should "pass exemple compress, uncompress RESEAUX" in {
           val msg_original = "RUE"
           val h = new Huffman[Char]("RESEAUX")
           val msg_compressed = h.compress(msg_original)
@@ -121,7 +120,7 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           assert(msg_uncompressed === msg_original.toList)
       }
 
-      it should "exemple compress, uncompress MISSISSIPPI RIVER" in {
+      it should "pass exemple compress, uncompress MISSISSIPPI RIVER" in {
           val msg_original = "MISSISSIPPI RIVER"
           val h = new Huffman[Char](msg_original)
           val msg_compressed = h.compress(msg_original)
@@ -129,7 +128,7 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           assert(h.tree.get.label === 17 )
           assert(msg_uncompressed === msg_original.toList)
       }
-      it should "exemple compress, uncompress DINDE" in {
+      it should "dont pass exemple compress DINDE" in {
           val msg_original = "DINDE"
           val h = new Huffman[Char]("DIDONDINADITONDUDOSDUNDODUDINDON")
           assert({try {
