@@ -156,17 +156,17 @@ sealed abstract class EncodingTree[S](val label : Int)
       def parcourir_to_get_leaf(node_current : EncodingTree[S]) : Double = node_current match {
         case EncodingLeaf(lbl, v   ) =>
           this.encode(v) match {
-            case Some(v_encoded : Seq[Bit]) => {
+            case Some(v_encoded : Seq[Bit]) =>
               //println(s"${lbl.toDouble}* ${v_encoded.length.toDouble} ")
               v_encoded.length.toDouble * lbl.toDouble
-            }
+
             case _ => 0.0
           }
          // si c'est une feuille
         case EncodingNode(_, l, r) => parcourir_to_get_leaf(l) + parcourir_to_get_leaf(r) // si c'est un noeud
       }
       parcourir_to_get_leaf(this)/this.label.toDouble
-    } // TODO
+    }
 
     /** @inheritdoc */
     override def toString : String = this match

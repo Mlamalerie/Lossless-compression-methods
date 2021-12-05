@@ -54,6 +54,16 @@ class RLESpec extends AnyFlatSpec with Matchers
           assert(msg_compressed === List( ('R',1), ('E',2), ('L',2), ('E',1), ('M',1), ('E',1), ('N',1), ('T',1) ) )
           assert(msg_uncompressed === msg_original.toList)
       }
+      it should "exemple abc" in {
+          val r = new RLE[Char]()
+          val msg_original = "abc"
+          assert(r.uncompress(r.compress(msg_original)) == Some(msg_original.toList))
+      }
+      it should "exemple whaaaat" in {
+          val r = new RLE[Char]()
+          val msg_original = "whaaaat"
+          assert(r.uncompress(r.compress(msg_original)) == Some(msg_original.toList))
+      }
 
 
   }

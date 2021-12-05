@@ -11,8 +11,8 @@ class ShannonFano[S](source : Seq[S]) extends StatisticCompressor[S](source)
       def two_equitable_part(tab : List[EncodingTree[S]],  i_g : Int =0, i_d : Int=0, g :  List[EncodingTree[S]] = Nil , d : List[EncodingTree[S]] = Nil ): (List[EncodingTree[S]],List[EncodingTree[S]]) = {
         val tab_sorted = tab.sortWith( (a,b) => a.label < b.label)
 
-        val sum_g = g.map(_.label).sum
-        val sum_d = d.map(_.label).sum
+        val sum_g = g.map(_.label).sum // somme de la partie gauche
+        val sum_d = d.map(_.label).sum // somme de la partie droite
         //println(i_g, i_d, " - ", g,  sum_g , " ; ", d,  sum_d)
         if( (g.length + d.length) == tab_sorted.length) {
           (g,d)

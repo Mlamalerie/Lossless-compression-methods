@@ -27,7 +27,6 @@ class RLE[T] extends Compressor[T, Seq[(T, Int)]] {
 			else
 				x +: duplicate(x, nb - 1)
 		}
-
 		val seq_msg_uncompressed = seq_msg.toList.foldLeft(Seq.empty[T])((acc, elem) => acc ++ duplicate(elem._1, elem._2))
 		// c carré ça ? demandé à la prof
 		seq_msg_uncompressed match {

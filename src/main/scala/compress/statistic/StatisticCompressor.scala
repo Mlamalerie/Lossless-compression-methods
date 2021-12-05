@@ -24,7 +24,7 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
 
     /** The sequence of occurrences sorted by count */
     val orderedCounts : Seq[(S, Int)] = {
-      occurrences.toList.sortWith((a,b) => a._2 > b._2) // trier par count uniquement
+      occurrences.toList.sortWith((a,b) => a._2 > b._2) // trier par count uniquement de plus grand au plus petit
      }
 
     /** The encoding tree (in most cases, depends from `source`) */
@@ -36,16 +36,17 @@ abstract class StatisticCompressor[S](source : Seq[S]) extends Compressor[S, Seq
            case Some(the_tree: EncodingTree[S]) =>
              // pour chaque symbol du message
              msg.map(c => {
+               // on encode
                the_tree.encode(c) match {
+                 // si tout va bien
                  case Some(ch_encoded: Seq[Bit]) => ch_encoded
+                 // en cas de problème (si rien n'est retourner alors c'est que notre arbre ne possède pas le symbole dans ces feuille )
                  case _ => throw CustomException("le symbole " + c.toString + " n'est pas encodable par notre arbre. En effet, veuillez saisir un mot qui contient des symboles connus")
                }
              }).toList.flatten
-
            // si arbre est pas bien défini
            case _ => Seq()
     }
-
 
     /** @inheritdoc */
     def uncompress(res: Seq[Bit]): Option[Seq[S]] = this.tree match {

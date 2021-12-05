@@ -35,6 +35,13 @@ class EncodingTreeSpec extends AnyFlatSpec with Matchers
         assert(t.dict_correspondence('M') === Seq(Zero,One))
       }
 
+      it should "pass encode() good" in {
+          val t = EncodingNode[Char](7, EncodingNode[Char](4, EncodingLeaf[Char](2,'L'), EncodingLeaf[Char](2,'M')), EncodingNode[Char](3, EncodingLeaf[Char](2,'A'), EncodingLeaf[Char](1,'I')))
+          assert(t.encode('L') === Some(Seq(Zero,Zero)))
+          assert(t.encode('M') === Some(Seq(Zero,One)))
+          assert(t.encode('x') === None)
+      }
+
 
   }
 
