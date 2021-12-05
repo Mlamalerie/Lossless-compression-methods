@@ -57,8 +57,6 @@ class HuffmanSpec extends AnyFlatSpec with Matchers
           val t1 = new Huffman[Char]("AB").tree.get
           val values1 = t.dict_correspondence.values.toList
           assert((values1.map(x => values.count(_ != x)).sum == (values1.length - 1)*values1.length) === true)
-
-
       }
 
 
